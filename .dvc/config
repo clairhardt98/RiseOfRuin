@@ -1,0 +1,5 @@
+[core]
+    autostage = true
+    remote = riseofruinlargecontents
+['remote "riseofruinlargecontents"']
+    url = gdrive://1j5jf-EAiiAizP0Yz1s3R0V81VFtlvrUt
