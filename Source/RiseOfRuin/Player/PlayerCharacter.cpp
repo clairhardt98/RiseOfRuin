@@ -46,6 +46,7 @@ APlayerCharacter::APlayerCharacter()
 	(TEXT("/Game/ParagonKwang/Characters/Heroes/Kwang/Meshes/KwangRosewood.KwangRosewood"));
 	if(SK_KWANG.Succeeded())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Skeletal Mesh Success"));
 		GetMesh()->SetSkeletalMesh(SK_KWANG.Object);
 	}
 	
@@ -57,7 +58,7 @@ APlayerCharacter::APlayerCharacter()
 	(TEXT("/Game/ParagonKwang/Characters/Heroes/Kwang/Animations/Kwang_AnimBlueprint.Kwang_AnimBlueprint_C"));
 	if(KWANG_ANIM.Succeeded())
 	{
-		printf("AnimBlueprint Success");
+		UE_LOG(LogTemp, Warning, TEXT("Anim Blueprint Success"));
 		GetMesh()->SetAnimInstanceClass(KWANG_ANIM.Class);
 	}
 }
