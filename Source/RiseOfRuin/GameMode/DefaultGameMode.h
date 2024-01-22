@@ -4,14 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "CRiseOfRuinGameMode.generated.h"
+#include "DefaultGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RISEOFRUIN_API ACRiseOfRuinGameMode : public AGameModeBase
+class RISEOFRUIN_API ADefaultGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	ADefaultGameMode();
 };
