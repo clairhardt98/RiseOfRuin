@@ -16,5 +16,4 @@ class RISEOFRUIN_API ADefaultGameMode : public AGameModeBase
 	
 public:
 	ADefaultGameMode();
-	
 };

@@ -6,8 +6,10 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "RiseOfRuin/RiseOfRuin.h"
 #include "RiseOfRuin/RiseOfRuinCharacter.h"
 #include "RiseOfRuin/Data/InputDataAsset.h"
+#include "InputMappingContext.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -50,8 +52,8 @@ APlayerCharacter::APlayerCharacter()
 		GetMesh()->SetSkeletalMesh(SK_KWANG.Object);
 	}
 	
-	//GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
+	//GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
 	//애니메이션 블루프린트
 	static ConstructorHelpers::FClassFinder<UAnimInstance> KWANG_ANIM
@@ -61,12 +63,31 @@ APlayerCharacter::APlayerCharacter()
 		UE_LOG(LogTemp, Warning, TEXT("Anim Blueprint Success"));
 		GetMesh()->SetAnimInstanceClass(KWANG_ANIM.Class);
 	}
+	//인풋 매핑 컨텍스트 가져오기
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> INPUT_MAPPING_CONTEXT
+	(TEXT("Game/Input/IMC_DefaultInputMappingContext.IMC_DefaultInputMappingContext"));
+	if(INPUT_MAPPING_CONTEXT.Succeeded())
+	{
+		PRINT_LOG(TEXT("PlayerCharacter"), TEXT("InputMappingContext Load Succeeded"));
+		DefaultMappingContext = INPUT_MAPPING_CONTEXT.Object;
+	}
+	//인풋 데이터 에셋 가져오기
+	static ConstructorHelpers::FObjectFinder<UInputDataAsset> INPUT_DATA_ASSET
+	(TEXT("/Game/Input/BP_InputAssetData.BP_InputAssetData"));
+	if(INPUT_DATA_ASSET.Succeeded())
+	{
+		PRINT_LOG(TEXT("PlayerCharacter"), TEXT("InputDataAsset Load Succeeded"));
+		InputDataAsset = INPUT_DATA_ASSET.Object;
+	}
+	
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
+	
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -85,14 +106,21 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Move함수 바인딩
-		EnhancedInputComponent->BindAction(InputDataAsset->InputMove, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
-		// Look함수 바인딩
-		EnhancedInputComponent->BindAction(InputDataAsset->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
-		// 스페이스 입력 시 함수 바인딩
-		EnhancedInputComponent->BindAction(InputDataAsset->InputSpaceAction, ETriggerEvent::Started, this, &APlayerCharacter::OnSpacePressed);
-		// 스페이스 입력 해제 시 함수 바인딩
-		EnhancedInputComponent->BindAction(InputDataAsset->InputSpaceAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnSpaceReleased);
+		if(!InputDataAsset)
+		{
+			UE_LOG(LogTemplateCharacter, Error, TEXT("InputDataAsset is Null"));
+		}
+		else
+		{
+			// Move함수 바인딩
+			EnhancedInputComponent->BindAction(InputDataAsset->InputMove, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+			// Look함수 바인딩
+			EnhancedInputComponent->BindAction(InputDataAsset->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+			// 스페이스 입력 시 함수 바인딩
+			EnhancedInputComponent->BindAction(InputDataAsset->InputSpaceAction, ETriggerEvent::Started, this, &APlayerCharacter::OnSpacePressed);
+			// 스페이스 입력 해제 시 함수 바인딩
+			EnhancedInputComponent->BindAction(InputDataAsset->InputSpaceAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnSpaceReleased);
+		}
 	}
 	else
 	{
@@ -101,10 +129,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	// wasd 키보드 인풋값을 받아옴
 	FVector2D MovementVector = Value.Get<FVector2D>();
+	PRINT_LOG(TEXT("PlayerCharacter"), TEXT("Move"));
 
 	if (Controller != nullptr)
 	{
@@ -134,6 +164,7 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 	if (Controller != nullptr)
 	{
 		// 마우스 인풋의 X는 Controller의 Yaw에, Y는 Pitch에 입력해줌
+
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
@@ -141,8 +172,10 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::OnSpacePressed(const FInputActionValue& Value)
 {
+	PRINT_LOG(TEXT("PlayerCharacter : "), TEXT("OnSpacePressed"));
 }
 
 void APlayerCharacter::OnSpaceReleased(const FInputActionValue& Value)
 {
+	PRINT_LOG(TEXT("PlayerCharacter : "), TEXT("OnSpaceReleased"));
 }

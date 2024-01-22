@@ -1,14 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "DefaultGameMode.h"
+#include "RiseOfRuin/RiseOfRuin.h"
+#include "RiseOfRuin/Player/PlayerCharacter.h"
 
 ADefaultGameMode::ADefaultGameMode()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Player/BP_Player.BP_Player"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+	DefaultPawnClass = APlayerCharacter::StaticClass();
+	PRINT_CALLINFO();
+	PRINT_LOG(TEXT("DefaultGameMode : "), TEXT("Debug Test"));
 }
+
