@@ -45,7 +45,7 @@ APlayerCharacter::APlayerCharacter()
 
 	//스켈레탈 메시
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_KWANG
-	(TEXT("/Game/ParagonKwang/Characters/Heroes/Kwang/Meshes/KwangRosewood.KwangRosewood"));
+	(TEXT("/Game/Extern/ParagonKwang/Characters/Heroes/Kwang/Meshes/Kwang_GDC.Kwang_GDC"));
 	if(SK_KWANG.Succeeded())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Skeletal Mesh Success"));
@@ -57,11 +57,16 @@ APlayerCharacter::APlayerCharacter()
 
 	//애니메이션 블루프린트
 	static ConstructorHelpers::FClassFinder<UAnimInstance> KWANG_ANIM
-	(TEXT("/Game/ParagonKwang/Characters/Heroes/Kwang/Animations/Kwang_AnimBlueprint.Kwang_AnimBlueprint_C"));
+	(TEXT("/Game/Extern/ParagonKwang/Characters/Heroes/Kwang/Animations/Kwang_AnimBlueprint.Kwang_AnimBlueprint_C"));
 	if(KWANG_ANIM.Succeeded())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Anim Blueprint Success"));
 		GetMesh()->SetAnimInstanceClass(KWANG_ANIM.Class);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Anim Blueprint Failed"));
+
 	}
 	//인풋 매핑 컨텍스트 가져오기
 	static ConstructorHelpers::FObjectFinder<UInputMappingContext> INPUT_MAPPING_CONTEXT
@@ -134,7 +139,6 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	// wasd 키보드 인풋값을 받아옴
 	FVector2D MovementVector = Value.Get<FVector2D>();
-	PRINT_LOG(TEXT("PlayerCharacter"), TEXT("Move"));
 
 	if (Controller != nullptr)
 	{
