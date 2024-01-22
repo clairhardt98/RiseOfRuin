@@ -70,7 +70,7 @@ APlayerCharacter::APlayerCharacter()
 	}
 	//인풋 매핑 컨텍스트 가져오기
 	static ConstructorHelpers::FObjectFinder<UInputMappingContext> INPUT_MAPPING_CONTEXT
-	(TEXT("Game/Input/IMC_DefaultInputMappingContext.IMC_DefaultInputMappingContext"));
+	(TEXT("/Game/Input/IMC_DefaultInputMappingContext.IMC_DefaultInputMappingContext"));
 	if(INPUT_MAPPING_CONTEXT.Succeeded())
 	{
 		PRINT_LOG(TEXT("PlayerCharacter"), TEXT("InputMappingContext Load Succeeded"));
