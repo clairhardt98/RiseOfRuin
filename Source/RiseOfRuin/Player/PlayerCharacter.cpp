@@ -90,9 +90,6 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
-	
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -167,7 +164,7 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
-		// 마우스 인풋의 X는 Controller의 Yaw에, Y는 Pitch에 입력해줌
+		// 마우스 인풋의 X는 Controller의 Yaw에, Y는 Pitch에 입력해
 
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
@@ -177,9 +174,11 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 void APlayerCharacter::OnSpacePressed(const FInputActionValue& Value)
 {
 	PRINT_LOG(TEXT("PlayerCharacter : "), TEXT("OnSpacePressed"));
+	bPressedJump = true;
 }
 
 void APlayerCharacter::OnSpaceReleased(const FInputActionValue& Value)
 {
 	PRINT_LOG(TEXT("PlayerCharacter : "), TEXT("OnSpaceReleased"));
+	bPressedJump = false;
 }
